@@ -44,7 +44,7 @@ public class CodeUtil {
         try {
             fileManager = compile(javaCode, printWriter);
         } catch (IOException e) {
-            return stringWriter.toString();
+            return e.getMessage() + "\n\n" + stringWriter;
         }
 
         ClassPool classPool = new ClassPool();
@@ -204,7 +204,7 @@ public class CodeUtil {
         JavaFileObject compilationUnit = new StringJavaFileObject(CLASS_NAME, program);
 
         DiagnosticListener<JavaFileObject> listener = diagnostic -> {
-            printWriter.println("Compilation failed!\n");
+            printWriter.print(diagnostic.getKind().toString().toLowerCase() + ": ");
             printWriter.print(diagnostic.getMessage(Locale.ENGLISH));
             printWriter.println(" at line " + (diagnostic.getLineNumber() - 3) + "."); // -3 for class and method definitions.
         };
