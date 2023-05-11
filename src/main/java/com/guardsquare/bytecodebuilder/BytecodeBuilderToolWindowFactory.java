@@ -20,15 +20,18 @@ import java.awt.*;
 public class BytecodeBuilderToolWindowFactory
 implements   ToolWindowFactory, DumbAware
 {
+    public static final String CLASS_NAME = "Container";
+    public static final String METHOD_NAME = "main";
+
     private static final String PROMPT_START =
-            "class Container {\n" +
-                    "    public static void main(String[] args) {\n" +
-                    "        // Put your code here.\n" +
-                    "        // DON'T CHANGE ANYTHING ELSE OR THINGS WILL BREAK.\n";
+            "class " + CLASS_NAME + " {\n" +
+            "    public static void " + METHOD_NAME + "() {\n" +
+            "        // Put your code here.\n";
 
     private static final String PROMPT_END   =
             "    }\n" +
-                    "}";
+            "}";
+
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow)
     {
@@ -82,8 +85,7 @@ implements   ToolWindowFactory, DumbAware
         private void updateOutputPanel()
         {
             String text = inputField.getText();
-            String convert = text.substring(PROMPT_START.length(), text.length() - PROMPT_END.length());
-            outputField.setText(CodeUtil.getProGuardInstructions(convert));
+            outputField.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
         }
     }
 }

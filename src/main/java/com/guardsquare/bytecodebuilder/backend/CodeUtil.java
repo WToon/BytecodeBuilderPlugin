@@ -1,17 +1,14 @@
 package com.guardsquare.bytecodebuilder.backend;
 
-import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import proguard.classfile.ClassPool;
 import proguard.classfile.Clazz;
 import proguard.classfile.Method;
 import proguard.classfile.attribute.Attribute;
 import proguard.classfile.attribute.CodeAttribute;
-import proguard.classfile.attribute.ExceptionInfo;
 import proguard.classfile.attribute.visitor.AllAttributeVisitor;
 import proguard.classfile.attribute.visitor.AttributeNameFilter;
 import proguard.classfile.attribute.visitor.AttributeVisitor;
-import proguard.classfile.attribute.visitor.ExceptionInfoVisitor;
 import proguard.classfile.attribute.visitor.MultiAttributeVisitor;
 import proguard.classfile.constant.ClassConstant;
 import proguard.classfile.constant.visitor.ConstantVisitor;
@@ -30,11 +27,12 @@ import java.io.*;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.CLASS_NAME;
+import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.METHOD_NAME;
 
 public class CodeUtil {
-    private static final String CLASS_NAME  = "CodeGen";
-    private static final String METHOD_NAME = "method";
-
     public static String getProGuardInstructions(String javaCode) {
         // Writer for service.
         StringWriter stringWriter = new StringWriter();
@@ -70,7 +68,7 @@ public class CodeUtil {
 
         BranchTargetFinder targetFinder = new BranchTargetFinder();
         classPool.classAccept(CLASS_NAME, new AllMethodVisitor(
-                new MemberNameFilter("method",
+                new MemberNameFilter(METHOD_NAME,
                 new AllAttributeVisitor(
                 new AttributeNameFilter(Attribute.CODE,
                 new MultiAttributeVisitor(targetFinder,
@@ -78,7 +76,6 @@ public class CodeUtil {
                       @Override
                       public void visitCodeAttribute(Clazz clazz, Method method, CodeAttribute codeAttribute) {
                           Map<Integer, ProcessingItem> offsetsToProcessingItems = new HashMap<>();
-                          List<ProcessingItem> thingsToProcess = new ArrayList<>();
                           ExceptionLabelManager exceptionLabelManager = new ExceptionLabelManager();
                           LabelPrinter labelPrinter = new LabelPrinter(printWriter, targetFinder);
                           MethodRefPrinter methodRefPrinter = new MethodRefPrinter(printWriter);
@@ -93,40 +90,36 @@ public class CodeUtil {
                                   offsetsToProcessingItems.put(offset, new ProcessingItem(instruction, offset));
                               }
                           });
-                          thingsToProcess.addAll(offsetsToProcessingItems.entrySet()
-                                                                         .stream()
-                                                                         .sorted(Comparator.comparingInt(Map.Entry::getKey))
-                                                                         .map(Map.Entry::getValue)
-                                                                         .collect(Collectors.toList()));
+                          List<ProcessingItem> thingsToProcess = offsetsToProcessingItems.entrySet()
+                                  .stream()
+                                  .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                                  .map(Map.Entry::getValue).collect(Collectors.toList());
 
-                          // Add exceptioninfo where it needs to go
-                          codeAttribute.exceptionsAccept(clazz, method, new ExceptionInfoVisitor() {
-                              @Override
-                              public void visitExceptionInfo(Clazz clazz, Method method, CodeAttribute codeAttribute, ExceptionInfo exceptionInfo) {
+                          // Add exception info where it needs to go.
+                          codeAttribute.exceptionsAccept(clazz, method, (clazz1, method1, codeAttribute1, exceptionInfo) -> {
 
-                                  String exceptionClassName = getReferencedClassName(clazz, exceptionInfo.u2catchType);
-                                  int tryStartOffset = exceptionInfo.u2startPC;
-                                  int tryEndOffset = exceptionInfo.u2endPC;
-                                  int exceptionHandlerOffset = exceptionInfo.u2handlerPC;
+                              String exceptionClassName = getReferencedClassName(clazz1, exceptionInfo.u2catchType);
+                              int tryStartOffset = exceptionInfo.u2startPC;
+                              int tryEndOffset = exceptionInfo.u2endPC;
+                              int exceptionHandlerOffset = exceptionInfo.u2handlerPC;
 
-                                  // Add labels
-                                  String tryStartLabel = exceptionLabelManager.getFreshTryStartLabel();
-                                  String tryEndLabel = exceptionLabelManager.getFreshTryEndLabel();
-                                  String handlerLabel = exceptionLabelManager.getFreshHandlerLabel();
+                              // Add labels
+                              String tryStartLabel = exceptionLabelManager.getFreshTryStartLabel();
+                              String tryEndLabel = exceptionLabelManager.getFreshTryEndLabel();
+                              String handlerLabel = exceptionLabelManager.getFreshHandlerLabel();
 
-                                  insertLabelAt(tryStartLabel, tryStartOffset, thingsToProcess, offsetsToProcessingItems);
-                                  insertLabelAt(tryEndLabel, tryEndOffset, thingsToProcess, offsetsToProcessingItems);
-                                  insertLabelAt(handlerLabel, exceptionHandlerOffset, thingsToProcess, offsetsToProcessingItems);
+                              insertLabelAt(tryStartLabel, tryStartOffset, thingsToProcess, offsetsToProcessingItems);
+                              insertLabelAt(tryEndLabel, tryEndOffset, thingsToProcess, offsetsToProcessingItems);
+                              insertLabelAt(handlerLabel, exceptionHandlerOffset, thingsToProcess, offsetsToProcessingItems);
 
-                                  // Add the catch pseudo-instruction to the end of our processing list
-                                  thingsToProcess.add(new ProcessingItem(new CatchSpec(
-                                      tryStartLabel,
-                                      tryEndLabel,
-                                      handlerLabel,
-                                      exceptionClassName
-                                  )));
+                              // Add the catch pseudo-instruction to the end of our processing list
+                              thingsToProcess.add(new ProcessingItem(new CatchSpec(
+                                  tryStartLabel,
+                                  tryEndLabel,
+                                  handlerLabel,
+                                  exceptionClassName
+                              )));
 
-                              }
                           });
 
                           // Print more labels
@@ -179,14 +172,6 @@ public class CodeUtil {
 
     @NotNull
     public static SimpleJavaFileManager compile(String javaCode, PrintWriter printWriter) throws IOException {
-        String program =
-            "public class " + CLASS_NAME + " {\n" +
-                "public static void main(String[] args) { method(); }\n" +
-                "public static " + (javaCode.contains("return;") || !javaCode.contains("return") ? "void" : "Object") + " " + METHOD_NAME + "() {\n" +
-                    javaCode + "\n" +
-                "}\n" +
-            "}\n";
-
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null)
         {
@@ -201,7 +186,7 @@ public class CodeUtil {
             }
         }
 
-        JavaFileObject compilationUnit = new StringJavaFileObject(CLASS_NAME, program);
+        JavaFileObject compilationUnit = new StringJavaFileObject(CLASS_NAME, javaCode);
 
         DiagnosticListener<JavaFileObject> listener = diagnostic -> {
             printWriter.print(diagnostic.getKind().toString().toLowerCase() + ": ");
