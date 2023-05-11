@@ -147,7 +147,7 @@ public class CodeUtil {
                       }
                 }))))));
 
-        return stringWriter.toString();
+        return stringWriter.toString().strip() + ";" + System.lineSeparator();
     }
 
     private static void insertLabelAt(String labelName, int offset, List<ProcessingItem> processingItems, Map<Integer, ProcessingItem> offsetsToProcessingItems)
