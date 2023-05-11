@@ -1,12 +1,147 @@
-<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M32.0845 7.94025V4H24.0203V7.9896H16.029V4H7.91553V7.94025H4V36H16.0044V32.0045C16.0058 30.9457 16.4274 29.9308 17.1766 29.1826C17.9258 28.4345 18.9412 28.0143 20 28.0143C21.0588 28.0143 22.0743 28.4345 22.8234 29.1826C23.5726 29.9308 23.9942 30.9457 23.9956 32.0045V36H36V7.94025H32.0845Z"
-          fill="url(#paint0_linear)"/>
-    <defs>
-        <linearGradient id="paint0_linear" x1="2.94192" y1="4.89955" x2="37.7772" y2="39.7345"
-                        gradientUnits="userSpaceOnUse">
-            <stop offset="0.15937" stop-color="#3BEA62"/>
-            <stop offset="0.5404" stop-color="#3C99CC"/>
-            <stop offset="0.93739" stop-color="#6B57FF"/>
-        </linearGradient>
-    </defs>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="10.583333mm"
+   height="10.583333mm"
+   viewBox="0 0 10.583333 10.583333"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="thefinal40.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="0.69664703"
+     inkscape:cx="-378.24033"
+     inkscape:cy="222.49431"
+     inkscape:window-width="2560"
+     inkscape:window-height="1403"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-103.32982,-120.04082)">
+    <image
+       preserveAspectRatio="none"
+       inkscape:svg-dpi="96"
+       width="10.583333"
+       height="10.583333"
+       xlink:href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFk
+b2JlIElsbHVzdHJhdG9yIDI3LjEuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246
+IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5z
+PSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMu
+b3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTAwIDUwMCIgc3R5
+bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTAwIDUwMDsiIHhtbDpzcGFjZT0icHJlc2Vy
+dmUiPgo8c3R5bGUgdHlwZT0idGV4dC9jc3MiPgoJLnN0MHtmaWxsOiMwMEEzRTI7fQoJLnN0MXtm
+aWxsOiMwMDRGOTE7fQo8L3N0eWxlPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNMjI1LjYsMTk1LjNs
+LTc5LjgtNDIuNGMtMTIuNi02LjYtMTkuNi0yLjYtMTkuNiwxMS43djI1NC4yYzAsMTguNiwzLjks
+MjYuNCwyMC4zLDM1LjNsNzkuMiw0Mi4xICBjMTQuNCw3LjUsMjAuOSwzLjgsMjAuOS05LjZsMC4y
+LTI1OEMyNDYuOSwyMTIsMjQxLjMsMjAzLjcsMjI1LjYsMTk1LjN6Ii8+CjxwYXRoIGNsYXNzPSJz
+dDEiIGQ9Ik00MDYuMywxMDkuNkwyMTMuMSw2LjhjLTE3LjMtOC45LTM1LjctOS4yLTUzLjUsMC4x
+TDcyLjIsNTMuM0wyODYsMTY3YzE1LjQsOC4yLDIxLDE4LjQsMjEuMSwzNi41djEyNy4xICBjMC4x
+LDEzLjIsNy4yLDE2LDE3LjgsMTAuNmwxMDIuOS01NC43VjE0Ni4zQzQyNy44LDEyNy43LDQyMi4x
+LDExNy44LDQwNi4zLDEwOS42eiIvPgo8L3N2Zz4=
+"
+       id="image192"
+       x="103.32982"
+       y="120.04082" />
+    <image
+       preserveAspectRatio="none"
+       inkscape:svg-dpi="96"
+       width="5.0793257"
+       height="5.2376528"
+       xlink:href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBVcGxvYWRl
+ZCB0bzogU1ZHIFJlcG8sIHd3dy5zdmdyZXBvLmNvbSwgR2VuZXJhdG9yOiBTVkcgUmVwbyBNaXhl
+ciBUb29scyAtLT4NCjxzdmcgaGVpZ2h0PSI4MDBweCIgd2lkdGg9IjgwMHB4IiB2ZXJzaW9uPSIx
+LjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6
+eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIA0KCSB2aWV3Qm94PSIwIDAgNDEw
+LjY2NiA0MTAuNjY2IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxnPg0KCQk8cGF0aCBz
+dHlsZT0iZmlsbDojODAzNjJEOyIgZD0iTTMwMS44MzQsMTE1LjFsLTg2LjM2NywxNDguMTEzbDMy
+LjkwMiw2LjU4QzI5MS45NjQsMjYwLjUxLDMyOC40MywyMDMuMTEyLDMwMS44MzQsMTE1LjF6Ii8+
+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBzdHlsZT0iZmlsbDojODAzNjJEOyIgZD0iTTEwOC44MzIs
+MTE1LjFsODYuMzY3LDE0OC4xMTNsLTMyLjkwMiw2LjU4QzExOC43MDIsMjYwLjUxLDgyLjIzNiwy
+MDMuMTEyLDEwOC44MzIsMTE1LjF6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBzdHlsZT0iZmls
+bDojRkZEN0EzOyIgZD0iTTI1MS43NTMsMjMyLjUyaC0wLjM1OHYtMTUuMzdoLTkyLjEyNHYxNS4z
+NTRjMCwxNS4wNDItMC4wNjMsMzEuMzkyLTEzLjE2MSw0MS4yODJ2NTIuNTYNCgkJCWMwLDAsOTAu
+MjM0LDAsMTE4LjQ0Niwwdi01Mi43OUMyNTEuNzk0LDI2My42NDIsMjUxLjc1MywyNDcuNDMzLDI1
+MS43NTMsMjMyLjUyeiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggc3R5bGU9ImZpbGw6I0ZEQzg4
+RTsiIGQ9Ik0yNTcuOTc1LDMwMi42OTVjMi40MDEsMC42NTUsNC41NjMsMS4wMDQsNi41OCwxLjE3
+NHYtMzAuMzEyDQoJCQljLTEyLjc2Mi05LjkxNS0xMi44MDMtMjYuMTI0LTEyLjgwMy00MS4wMzdo
+MC4wMjl2LTE1LjM3aC03Mi43NzFsLTE5Ljc0MSw2LjU4QzE3Mi40MzEsMjM4LjUzNiwyMTIuNzM2
+LDI5MC4zNTYsMjU3Ljk3NSwzMDIuNjk1eg0KCQkJIi8+DQoJPC9nPg0KCTxnPg0KCQk8cGF0aCBz
+dHlsZT0iZmlsbDojRkZFMUIyOyIgZD0iTTI5Ny40NTcsMTMxLjYwNmMwLDUyLjY5Ni01Mi40MDgs
+MTE4LjQ0Ni05Mi4xMjQsMTE4LjQ0NnMtOTIuMTI0LTY1Ljc1LTkyLjEyNC0xMTguNDQ2DQoJCQlz
+NDEuMjQ2LTcyLjM4NCw5Mi4xMjQtNzIuMzg0UzI5Ny40NTcsNzguOTEsMjk3LjQ1NywxMzEuNjA2
+eiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggc3R5bGU9ImZpbGw6IzgwMzYyRDsiIGQ9Ik0yMTgu
+NDk0LDI2LjMyMWMtMy42OTcsMC0xNS43MDEsNC4xNTQtMjUuNTEyLDcuNzk0bC0wLjgwOS0xLjIx
+NGMwLDAtMS4zNTQsMS4wNjQtMy42OTgsMi45MDgNCgkJCWMtNS40NTcsMi4wNzItOS40NjIsMy42
+NzItOS40NjIsMy42NzJsMS41MzksMi41NjZjLTI0Ljk3NiwxOS42NzgtNjUuNzgzLDcxLjI3NC03
+MC45MDcsNzYuMzk4DQoJCQljLTYuNTgsNi41OCwxNC44NjEsMTcwLjU5MywyMy4yNTYsNzUuNDYz
+YzYuMDgyLTY4LjkxOSw1MC45NTctODQuNzM5LDkyLjE3NC05NC40MzdjMTguNjQ0LTQuMzg3LDE3
+LjU0OC0yOS4yODIsMTkuNzQxLTQwLjI0OQ0KCQkJQzI0Ny4wMDgsNDguMjU1LDIyNS4wNzQsMjYu
+MzIxLDIxOC40OTQsMjYuMzIxeiIvPg0KCTwvZz4NCgk8Zz4NCgkJPHBhdGggc3R5bGU9ImZpbGw6
+IzgwMzYyRDsiIGQ9Ik0yMzEuNjU0LDY3LjExOGMxMi4wNjQsNDMuMzIsMzcuMjg4LDkxLjAyOCw2
+MS4yMDMsOTMuMzczYzEyLjcyOSwxLjI0OCw1LjgzNC02Mi40NTksNS44MzQtNjIuNDU5DQoJCQlz
+LTE4LjIzMy0zMi41NTktMjAuNDI2LTMzLjY1NmMtMi4xOTMtMS4wOTctMTguNjQ0LTEzLjM4LTE4
+LjY0NC0xMy4zOGwtMzQuNTQ3LTQuOTM0TDIzMS42NTQsNjcuMTE4eiIvPg0KCTwvZz4NCgk8Zz4N
+CgkJPHBhdGggc3R5bGU9ImZpbGw6I0ZGRTFCMjsiIGQ9Ik0yODcuNjU3LDEzNy42OTFjMTAuNzY3
+LTIuNDY4LDE3LjgyMSwyLjgwNSwxNy44MjEsMTMuMTYxYzAsMTMuNzA5LTE0LjQ3OSw0Ny4yOTYt
+MjkuNzAxLDI2LjMyMQ0KCQkJTDI4Ny42NTcsMTM3LjY5MXoiLz4NCgk8L2c+DQoJPGc+DQoJCTxw
+YXRoIHN0eWxlPSJmaWxsOiNGRkJFMUU7IiBkPSJNMjg0LjI5NywzNi45OTZWMjYuMzMyYzAtMy42
+NC0yLjk1MS02LjU5MS02LjU5MS02LjU5MWgtNi41NTljLTEuNjg3LDAtMy4xODksMC42ODItNC4z
+NTQsMS43MjQNCgkJCWMtMTMuMjk2LTguMzkyLTI5LjY0MS0xMi45NTMtNDguMjk5LTE0LjM1VjYu
+NTkxYzAtMy42NC0yLjk1MS02LjU5MS02LjU5MS02LjU5MWgtMTMuMTM5Yy0zLjY0LDAtNi41OTEs
+Mi45NTEtNi41OTEsNi41OTF2MC41MjQNCgkJCWMtMTguNzc2LDEuNDEtMzUuMDYyLDYuMDI4LTQ4
+LjI3MiwxNC4zNjhjLTEuMTY5LTEuMDU1LTIuNjgzLTEuNzQyLTQuMzgyLTEuNzQyaC02LjU1OWMt
+My42NCwwLTYuNTkxLDIuOTUxLTYuNTkxLDYuNTkxdjEwLjY3Ng0KCQkJYy0xMi42NTksMTUuNzEx
+LTE5Ljc0MSwzOC4wMDItMTkuNzQxLDY4LjI3OHYxMy4xNjFoMTk3LjQxdi0xMy4xNjFDMzA0LjAz
+OCw3NC44MjgsMjk2Ljg3OCw1Mi42MTMsMjg0LjI5NywzNi45OTZ6Ii8+DQoJPC9nPg0KCTxnPg0K
+CQk8cGF0aCBzdHlsZT0iZmlsbDojRkM5QjI4OyIgZD0iTTIwNS4zMzMsOTIuMTI0Yy00Mi4xMyww
+LTEwNS4xNzksMTEuNzg0LTEwNS4xNzksMjYuMzIxaDIxMC4zNTkNCgkJCUMzMTAuNTEyLDEwMy45
+MDksMjQ3LjQ2Myw5Mi4xMjQsMjA1LjMzMyw5Mi4xMjR6Ii8+DQoJPC9nPg0KCTxnPg0KCQk8cGF0
+aCBzdHlsZT0iZmlsbDojRkZCRTFFOyIgZD0iTTMwNC4wMzgsMjgyLjM1aC0yLjE5M2MtMjQuODM1
+LDAtMzcuMzM0LTYuNTYzLTQzLjczMi0xNS45OTENCgkJCWMtNi40MDgsMTcuOTg1LTI3LjU4LDMx
+LjIwOC01Mi43NzksMzEuMjA4cy00Ni4zNzEtMTMuMjIyLTUyLjc3OS0zMS4yMDhjLTYuMzk4LDku
+NDI3LTE4Ljg5NywxNS45OTEtNDMuNzMyLDE1Ljk5MWgtMi4xOTMNCgkJCWMtMzkuOTc2LDAtNzIu
+Mzg0LDMyLjQwNy03Mi4zODQsNzIuMzg0djM2LjE5MmMwLDEwLjkwMiw4LjgzOCwxOS43NDEsMTku
+NzQxLDE5Ljc0MUgzNTYuNjhjMTAuOTAzLDAsMTkuNzQxLTguODM5LDE5Ljc0MS0xOS43NDENCgkJ
+CXYtMzYuMTkyQzM3Ni40MjEsMzE0Ljc1NywzNDQuMDE0LDI4Mi4zNSwzMDQuMDM4LDI4Mi4zNXoi
+Lz4NCgk8L2c+DQoJPGc+DQoJCTxwYXRoIHN0eWxlPSJmaWxsOiM0RjZFOEQ7IiBkPSJNOTMuNDY3
+LDQxMC42NjZoMjIzLjczMVYyODMuNjAyYy00LjI3NC0wLjc4Ni04LjY2LTEuMjUzLTEzLjE2MS0x
+LjI1M2gtMi4xOTMNCgkJCWMtNC4wMDQsMC03LjU3OS0wLjIyNy0xMC45NjctMC41NTN2NzAuMDE1
+YzAsMy4wMTItMS45OTksNS42NzUtNC45MjMsNi4zOTVjLTIyLjI3NSw1LjQ4Ni01MC4yMTYsOC43
+Ny04MC42MjEsOC43Nw0KCQkJcy01OC4zNDYtMy4yODQtODAuNjIxLTguNzdjLTIuOTI1LTAuNzIt
+NC45MjMtMy4zODMtNC45MjMtNi4zOTV2LTcwLjAxNWMtMy4zODksMC4zMjYtNi45NjMsMC41NTMt
+MTAuOTY3LDAuNTUzaC0yLjE5Mw0KCQkJYy00LjUwMSwwLTguODg3LDAuNDY3LTEzLjE2MSwxLjI1
+M1Y0MTAuNjY2eiIvPg0KCTwvZz4NCjwvZz4NCjwvc3ZnPg==
+"
+       id="image358"
+       x="108.83382"
+       y="125.3865" />
+  </g>
+  <style
+     type="text/css"
+     id="style66">
+	.st0{fill:#00A3E2;}
+	.st1{fill:#004F91;}
+</style>
 </svg>
