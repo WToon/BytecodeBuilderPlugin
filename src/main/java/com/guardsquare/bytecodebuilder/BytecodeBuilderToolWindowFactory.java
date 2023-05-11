@@ -23,12 +23,10 @@ implements   ToolWindowFactory, DumbAware
     public static final String CLASS_NAME = "Container";
     public static final String METHOD_NAME = "main";
 
-    private static final String PROMPT_START =
+    private static final String PROMPT =
             "class " + CLASS_NAME + " {\n" +
             "    public static void " + METHOD_NAME + "() {\n" +
-            "        // Put your code here.\n";
-
-    private static final String PROMPT_END   =
+            "        // Put your code here.\n" +
             "    }\n" +
             "}";
 
@@ -48,7 +46,7 @@ implements   ToolWindowFactory, DumbAware
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
-            inputField = new LanguageTextField(StdLanguages.JAVA, project, PROMPT_START + PROMPT_END);
+            inputField = new LanguageTextField(StdLanguages.JAVA, project, PROMPT);
             inputField.setOneLineMode(false);
 
             // Set up input panel.
