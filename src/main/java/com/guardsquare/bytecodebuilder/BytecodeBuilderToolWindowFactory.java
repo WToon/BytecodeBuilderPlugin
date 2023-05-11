@@ -64,7 +64,6 @@ implements   ToolWindowFactory, DumbAware
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
-            outputText.setLineWrap(true);
             outputField = new JBScrollPane(outputText);
 
             inputField = new CustomLanguageTextField(StdLanguages.JAVA, project, PROMPT, false);
