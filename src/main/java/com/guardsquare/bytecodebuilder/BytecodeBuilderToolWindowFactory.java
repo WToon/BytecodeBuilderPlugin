@@ -68,6 +68,7 @@ implements   ToolWindowFactory, DumbAware
             settings.setTabSize(4);
             settings.setShowIntentionBulb(true);
             settings.setAnimatedScrolling(true);
+            settings.setUseSoftWraps(true);
             return editor;
         }
     }
@@ -111,7 +112,7 @@ implements   ToolWindowFactory, DumbAware
                 if (resultCode == JFileChooser.APPROVE_OPTION)
                 {
                     customClassPath = classPathFileChooser.getSelectedFile().getAbsolutePath();
-                    classPathLabel.setText(customClassPath);
+                    classPathLabel.setText("Using custom class path: " + customClassPath);
                 }
             });
         }
