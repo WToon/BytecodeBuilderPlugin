@@ -20,6 +20,15 @@ import java.awt.*;
 public class BytecodeBuilderToolWindowFactory
 implements   ToolWindowFactory, DumbAware
 {
+    private static final String PROMPT_START =
+            "class Container {\n" +
+                    "    public static void main(String[] args) {\n" +
+                    "        // Put your code here.\n" +
+                    "        // DON'T CHANGE ANYTHING ELSE OR THINGS WILL BREAK.\n";
+
+    private static final String PROMPT_END   =
+            "    }\n" +
+                    "}";
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow)
     {
@@ -35,10 +44,9 @@ implements   ToolWindowFactory, DumbAware
         public LanguageTextField inputField;
         public JTextArea         outputField  = new JTextArea();
 
-
         public BytecodeBuilderToolWindowContent(Project project)
         {
-            inputField = new LanguageTextField(StdLanguages.JAVA, project, "");
+            inputField = new LanguageTextField(StdLanguages.JAVA, project, PROMPT_START + PROMPT_END);
             inputField.setOneLineMode(false);
 
             // Set up input panel.
@@ -73,7 +81,9 @@ implements   ToolWindowFactory, DumbAware
          */
         private void updateOutputPanel()
         {
-            outputField.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
+            String text = inputField.getText();
+            String convert = text.substring(PROMPT_START.length(), text.length() - PROMPT_END.length());
+            outputField.setText(CodeUtil.getProGuardInstructions(convert));
         }
     }
 }
