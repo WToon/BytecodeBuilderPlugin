@@ -24,14 +24,14 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
 
     private void visitBefore(int offset) {
         if (this.targetFinder.isBranchTarget(offset)) {
-            printWriter.println("\t.label(" + this.labelPrinter.getLabelName(offset) + ")");
+            printWriter.println("        .label(" + this.labelPrinter.getLabelName(offset) + ")");
         }
     }
 
     @Override
     public void visitSimpleInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, SimpleInstruction simpleInstruction) {
         visitBefore(offset);
-        this.printWriter.print("\t." + getName(simpleInstruction));
+        this.printWriter.print("        ." + getName(simpleInstruction));
         this.printWriter.print("(");
         if (simpleInstruction.constant > 5) {
             this.printWriter.print(simpleInstruction.constant);
@@ -42,7 +42,7 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
     @Override
     public void visitVariableInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, VariableInstruction variableInstruction) {
         visitBefore(offset);
-        this.printWriter.print("\t." + getName(variableInstruction));
+        this.printWriter.print("        ." + getName(variableInstruction));
         this.printWriter.print("(");
         if (variableInstruction.variableIndex > 3) {
             this.printWriter.print(variableInstruction.variableIndex);
@@ -53,7 +53,7 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
     @Override
     public void visitConstantInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, ConstantInstruction constantInstruction) {
         visitBefore(offset);
-        this.printWriter.print("\t.");
+        this.printWriter.print("        .");
         this.printWriter.print(getName(constantInstruction));
         this.printWriter.print("(");
         clazz.constantPoolEntryAccept(constantInstruction.constantIndex, this);
@@ -63,7 +63,7 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
     @Override
     public void visitBranchInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, BranchInstruction branchInstruction) {
         visitBefore(offset);
-        this.printWriter.println("\t." + getName(branchInstruction) + "(" + this.labelPrinter.getLabelName(offset + branchInstruction.branchOffset) + ")");
+        this.printWriter.println("        ." + getName(branchInstruction) + "(" + this.labelPrinter.getLabelName(offset + branchInstruction.branchOffset) + ")");
     }
 
     private String getName(Instruction instruction) {

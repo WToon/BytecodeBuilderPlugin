@@ -128,16 +128,16 @@ public class CodeUtil {
                           // Iterate over the entire ProcessingItem list, delegating where necessary.
                           InstructionPrinter instructionPrinter = new InstructionPrinter(printWriter, targetFinder, labelPrinter);
                           thingsToProcess.forEach(processingItem -> {
-                              switch(processingItem.type) {
+                              switch (processingItem.type) {
                                   case INSTRUCTION:
                                       processingItem.instruction.accept(clazz, method, codeAttribute, processingItem.instructionOffset, instructionPrinter);
                                       break;
                                   case LABEL:
-                                      printWriter.printf("\t.label(%s)%n", processingItem.labelName);
+                                      printWriter.printf("        .label(%s)%n", processingItem.labelName);
                                       break;
                                   case CATCH:
                                       CatchSpec spec = processingItem.catchSpec;
-                                      printWriter.printf("\t.catch_(%s, %s, %s, \"%s\", null)%n",
+                                      printWriter.printf("        .catch_(%s, %s, %s, \"%s\", null)%n",
                                                          spec.tryStartLabel,
                                                          spec.tryEndLabel,
                                                          spec.handlerLabel,
