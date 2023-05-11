@@ -1,15 +1,22 @@
 package com.guardsquare.bytecodebuilder.backend;
 
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import proguard.classfile.ClassPool;
 import proguard.classfile.Clazz;
 import proguard.classfile.Method;
 import proguard.classfile.attribute.Attribute;
 import proguard.classfile.attribute.CodeAttribute;
+import proguard.classfile.attribute.ExceptionInfo;
 import proguard.classfile.attribute.visitor.AllAttributeVisitor;
 import proguard.classfile.attribute.visitor.AttributeNameFilter;
 import proguard.classfile.attribute.visitor.AttributeVisitor;
+import proguard.classfile.attribute.visitor.ExceptionInfoVisitor;
 import proguard.classfile.attribute.visitor.MultiAttributeVisitor;
+import proguard.classfile.constant.ClassConstant;
+import proguard.classfile.constant.visitor.ConstantVisitor;
+import proguard.classfile.instruction.Instruction;
+import proguard.classfile.instruction.visitor.InstructionVisitor;
 import proguard.classfile.util.BranchTargetFinder;
 import proguard.classfile.visitor.AllMethodVisitor;
 import proguard.classfile.visitor.ClassPoolFiller;
@@ -37,7 +44,7 @@ public class CodeUtil {
         try {
             fileManager = compile(javaCode, printWriter);
         } catch (IOException e) {
-            return stringWriter.toString();
+            return e.getMessage() + "\n\n" + stringWriter;
         }
 
         ClassPool classPool = new ClassPool();
@@ -70,16 +77,104 @@ public class CodeUtil {
                 new AttributeVisitor() {
                       @Override
                       public void visitCodeAttribute(Clazz clazz, Method method, CodeAttribute codeAttribute) {
+                          Map<Integer, ProcessingItem> offsetsToProcessingItems = new HashMap<>();
+                          List<ProcessingItem> thingsToProcess = new ArrayList<>();
+                          ExceptionLabelManager exceptionLabelManager = new ExceptionLabelManager();
                           LabelPrinter labelPrinter = new LabelPrinter(printWriter, targetFinder);
                           MethodRefPrinter methodRefPrinter = new MethodRefPrinter(printWriter);
+
                           codeAttribute.instructionsAccept(clazz, method, labelPrinter);
                           codeAttribute.instructionsAccept(clazz, method, methodRefPrinter);
+
+                          // Collect instructions as ProcessingItems to prepare for exception handling insertion etc.
+                          codeAttribute.instructionsAccept(clazz, method, new InstructionVisitor() {
+                              @Override
+                              public void visitAnyInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, Instruction instruction) {
+                                  offsetsToProcessingItems.put(offset, new ProcessingItem(instruction, offset));
+                              }
+                          });
+                          thingsToProcess.addAll(offsetsToProcessingItems.entrySet()
+                                                                         .stream()
+                                                                         .sorted(Comparator.comparingInt(Map.Entry::getKey))
+                                                                         .map(Map.Entry::getValue)
+                                                                         .collect(Collectors.toList()));
+
+                          // Add exceptioninfo where it needs to go
+                          codeAttribute.exceptionsAccept(clazz, method, new ExceptionInfoVisitor() {
+                              @Override
+                              public void visitExceptionInfo(Clazz clazz, Method method, CodeAttribute codeAttribute, ExceptionInfo exceptionInfo) {
+
+                                  String exceptionClassName = getReferencedClassName(clazz, exceptionInfo.u2catchType);
+                                  int tryStartOffset = exceptionInfo.u2startPC;
+                                  int tryEndOffset = exceptionInfo.u2endPC;
+                                  int exceptionHandlerOffset = exceptionInfo.u2handlerPC;
+
+                                  // Add labels
+                                  String tryStartLabel = exceptionLabelManager.getFreshTryStartLabel();
+                                  String tryEndLabel = exceptionLabelManager.getFreshTryEndLabel();
+                                  String handlerLabel = exceptionLabelManager.getFreshHandlerLabel();
+
+                                  insertLabelAt(tryStartLabel, tryStartOffset, thingsToProcess, offsetsToProcessingItems);
+                                  insertLabelAt(tryEndLabel, tryEndOffset, thingsToProcess, offsetsToProcessingItems);
+                                  insertLabelAt(handlerLabel, exceptionHandlerOffset, thingsToProcess, offsetsToProcessingItems);
+
+                                  // Add the catch pseudo-instruction to the end of our processing list
+                                  thingsToProcess.add(new ProcessingItem(new CatchSpec(
+                                      tryStartLabel,
+                                      tryEndLabel,
+                                      handlerLabel,
+                                      exceptionClassName
+                                  )));
+
+                              }
+                          });
+
+                          // Print more labels
+                          exceptionLabelManager.getLabelCreationStatements().forEach(printWriter::println);
                           printWriter.println("composer");
-                          codeAttribute.instructionsAccept(clazz, method, new InstructionPrinter(printWriter, targetFinder, labelPrinter));
+
+                          // Iterate over the entire ProcessItem list, delegating where necessary
+                          InstructionPrinter instructionPrinter = new InstructionPrinter(printWriter, targetFinder, labelPrinter);
+                          thingsToProcess.forEach(processingItem -> {
+                              switch(processingItem.type) {
+                                  case INSTRUCTION:
+                                      processingItem.instruction.accept(clazz, method, codeAttribute, processingItem.instructionOffset, instructionPrinter);
+                                      break;
+                                  case LABEL:
+                                      printWriter.printf("\t.label(%s)%n", processingItem.labelName);
+                                      break;
+                                  case CATCH:
+                                      CatchSpec spec = processingItem.catchSpec;
+                                      printWriter.printf("\t.catch_(%s, %s, %s, \"%s\", null)%n",
+                                                         spec.tryStartLabel,
+                                                         spec.tryEndLabel,
+                                                         spec.handlerLabel,
+                                                         spec.exceptionClassName);
+                              }
+                          });
                       }
                 }))))));
 
         return stringWriter.toString();
+    }
+
+    private static void insertLabelAt(String labelName, int offset, List<ProcessingItem> processingItems, Map<Integer, ProcessingItem> offsetsToProcessingItems)
+    {
+        ProcessingItem itemToInsertBefore = offsetsToProcessingItems.get(offset);
+        int itemIdx = processingItems.indexOf(itemToInsertBefore);
+        processingItems.add(itemIdx, new ProcessingItem(labelName));
+    }
+
+    private static String getReferencedClassName(Clazz clazz, int constantPoolIdx)
+    {
+        final List<String> nameContainer = new ArrayList<>();
+        clazz.constantPoolEntryAccept(constantPoolIdx, new ConstantVisitor() {
+            @Override
+            public void visitClassConstant(Clazz clazz, ClassConstant classConstant) {
+                nameContainer.add(classConstant.getName(clazz));
+            }
+        });
+        return nameContainer.get(0);
     }
 
     @NotNull
@@ -109,7 +204,7 @@ public class CodeUtil {
         JavaFileObject compilationUnit = new StringJavaFileObject(CLASS_NAME, program);
 
         DiagnosticListener<JavaFileObject> listener = diagnostic -> {
-            printWriter.println("Compilation failed!\n");
+            printWriter.print(diagnostic.getKind().toString().toLowerCase() + ": ");
             printWriter.print(diagnostic.getMessage(Locale.ENGLISH));
             printWriter.println(" at line " + (diagnostic.getLineNumber() - 3) + "."); // -3 for class and method definitions.
         };

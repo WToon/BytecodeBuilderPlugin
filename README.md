@@ -1,0 +1,1 @@
+# ProGuardCORE BytecodeBuilderPlugin
