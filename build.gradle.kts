@@ -1,11 +1,10 @@
 plugins {
     id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.8.20"
     id("org.jetbrains.intellij") version "1.13.3"
 }
 
 group = "com.guardsquare"
-version = "1.0-SNAPSHOT"
+version = "1.0"
 
 repositories {
     mavenCentral()
@@ -25,9 +24,6 @@ tasks {
     withType<JavaCompile> {
         sourceCompatibility = "17"
         targetCompatibility = "17"
-    }
-    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions.jvmTarget = "17"
     }
 
     patchPluginXml {

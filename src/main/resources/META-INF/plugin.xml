@@ -10,7 +10,8 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description>Plugin for generating instruction builder code for Java snippets.</description>
+    <description>Plugin for generating InstructionSequenceBuilder code snippets from Java code snippets.</description>
+    <vendor>Guardsquare hackathon</vendor>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -20,6 +21,6 @@
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="BytecodeBuilder"
-                    factoryClass="com.guardsquare.bytecodebuilder.BytecodeBuilderWindowFactory"/>
+                    factoryClass="com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory"/>
     </extensions>
 </idea-plugin>
