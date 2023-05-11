@@ -1,4 +1,4 @@
-package com.guardsquare.proguard;
+package com.guardsquare.bytecodebuilder.backend;
 
 import org.jetbrains.annotations.NotNull;
 import proguard.classfile.ClassPool;

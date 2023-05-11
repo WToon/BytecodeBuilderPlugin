@@ -1,6 +1,7 @@
 package com.guardsquare.bytecodebuilder;
 
 
+import com.guardsquare.bytecodebuilder.backend.CodeUtil;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.project.Project;
@@ -66,7 +67,7 @@ implements   ToolWindowFactory
          */
         private void updateOutputPanel()
         {
-            outputField.setText(inputField.getText());
+            outputField.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
         }
     }
 }

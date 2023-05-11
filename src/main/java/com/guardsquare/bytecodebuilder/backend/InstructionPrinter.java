@@ -1,4 +1,4 @@
-package com.guardsquare.proguard;
+package com.guardsquare.bytecodebuilder.backend;
 
 import proguard.classfile.Clazz;
 import proguard.classfile.Method;
