@@ -19,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Objects;
 
 public class BytecodeBuilderToolWindowFactory
 implements   ToolWindowFactory, DumbAware
