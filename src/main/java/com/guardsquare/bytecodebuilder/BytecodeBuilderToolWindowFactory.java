@@ -46,39 +46,12 @@ implements   ToolWindowFactory, DumbAware
         toolWindow.getContentManager().addContent(content);
     }
 
-    private static class CustomLanguageTextField extends LanguageTextField
-    {
-        public CustomLanguageTextField(Language language, Project project, String text, boolean oneLineMode)
-        {
-            super(language, project, text, oneLineMode);
-        }
-
-        @Override
-        protected @NotNull EditorEx createEditor()
-        {
-            EditorEx       editor   = super.createEditor();
-            EditorSettings settings = editor.getSettings();
-
-            settings.setLineNumbersShown(true);
-            settings.setAutoCodeFoldingEnabled(true);
-            settings.setFoldingOutlineShown(true);
-            settings.setAllowSingleLogicalLineFolding(true);
-            settings.setIndentGuidesShown(true);
-            settings.setGutterIconsShown(true);
-            settings.setTabSize(4);
-            settings.setShowIntentionBulb(true);
-            settings.setAnimatedScrolling(true);
-            settings.setUseSoftWraps(true);
-            return editor;
-        }
-    }
-
     private static class BytecodeBuilderToolWindowContent
     {
         public  JPanel                   contentPanel               = new JPanel();
         public  LanguageTextField        inputField;
         public  JTextArea                outputText                 = new JTextArea();
-        public  JScrollPane              outputField                = new JBScrollPane(outputText);
+        public  JScrollPane              outputField;
         public  JButton                  classPathChooserOpenButton = new JButton("Set classpath");
         public  JLabel                   classPathLabel             = new JLabel("No custom classpath set.");
         public  JFileChooser             classPathFileChooser       = new JFileChooser();
@@ -88,6 +61,9 @@ implements   ToolWindowFactory, DumbAware
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
+            outputText.setLineWrap(true);
+            outputField = new JBScrollPane(outputText);
+
             inputField = new CustomLanguageTextField(StdLanguages.JAVA, project, PROMPT, false);
 
             // Set up input panel.
@@ -174,4 +150,32 @@ implements   ToolWindowFactory, DumbAware
             outputText.setText(CodeUtil.getProGuardInstructions(inputField.getText(), customClassPath));
         }
     }
+
+    private static class CustomLanguageTextField extends LanguageTextField
+    {
+        public CustomLanguageTextField(Language language, Project project, String text, boolean oneLineMode)
+        {
+            super(language, project, text, oneLineMode);
+        }
+
+        @Override
+        protected @NotNull EditorEx createEditor()
+        {
+            EditorEx       editor   = super.createEditor();
+            EditorSettings settings = editor.getSettings();
+
+            settings.setLineNumbersShown(true);
+            settings.setAutoCodeFoldingEnabled(true);
+            settings.setFoldingOutlineShown(true);
+            settings.setAllowSingleLogicalLineFolding(true);
+            settings.setIndentGuidesShown(true);
+            settings.setGutterIconsShown(true);
+            settings.setTabSize(4);
+            settings.setShowIntentionBulb(true);
+            settings.setAnimatedScrolling(true);
+            settings.setUseSoftWraps(true);
+            return editor;
+        }
+    }
+
 }
