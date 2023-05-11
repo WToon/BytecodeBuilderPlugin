@@ -1,0 +1,29 @@
+<html>
+<head><title>ProGuard Code Generator</title>
+    <script
+            src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+<script type="text/javascript">
+function convert() {
+    $.ajax({
+        type: "POST",
+        data: $("#java").val(),
+        url: "generate",
+        dataType: "text",
+        processData: false,
+        headers: {'content-type':'text/plain'},
+        success: function( data ) {
+            $( "#proguard" ).html( data );
+        }
+    });
+}
+</script>
+</head>
+<body>
+<textarea id="java" style="width: 600px; height: 150px;">System.out.println("Hello");</textarea>
+<button onclick="convert();">Convert</button>
+<pre id="proguard"></pre>
+
+</body>
+</html>
