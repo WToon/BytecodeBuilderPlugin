@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("org.jetbrains.intellij") version "1.13.3"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.guardsquare"
