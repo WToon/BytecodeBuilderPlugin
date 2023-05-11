@@ -15,6 +15,10 @@ import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -60,14 +64,16 @@ implements   ToolWindowFactory, DumbAware
     private static class BytecodeBuilderToolWindowContent
     {
 
-        public JPanel            contentPanel               = new JPanel();
-        public LanguageTextField inputField;
-        public JTextArea         outputText                 = new JTextArea();
-        public JScrollPane       outputField                = new JBScrollPane(outputText);
-        public JButton           classPathChooserOpenButton = new JButton("Set classpath");
-        public JLabel            classPathLabel             = new JLabel("No custom classpath set.");
-        public JFileChooser      classPathFileChooser       = new JFileChooser();
-        public String            customClassPath            = "";
+        public  JPanel                   contentPanel               = new JPanel();
+        public  LanguageTextField        inputField;
+        public  JTextArea                outputText                 = new JTextArea();
+        public  JScrollPane              outputField                = new JBScrollPane(outputText);
+        public  JButton                  classPathChooserOpenButton = new JButton("Set classpath");
+        public  JLabel                   classPathLabel             = new JLabel("No custom classpath set.");
+        public  JFileChooser             classPathFileChooser       = new JFileChooser();
+        public  String                   customClassPath            = "";
+        private ScheduledExecutorService executorService            = Executors.newSingleThreadScheduledExecutor();
+        private ScheduledFuture<?>       updateFuture               = null;
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
@@ -135,7 +141,14 @@ implements   ToolWindowFactory, DumbAware
                         @Override
                         public void documentChanged(@NotNull DocumentEvent event)
                         {
-                            updateOutputPanel();
+                            if (updateFuture != null)
+                            {
+                                updateFuture.cancel(false);
+                            }
+                            updateFuture = executorService.schedule(() -> {
+                                updateOutputPanel();
+                                updateFuture = null;
+                            }, 500L, TimeUnit.MILLISECONDS);
                         }
                     }
             );
