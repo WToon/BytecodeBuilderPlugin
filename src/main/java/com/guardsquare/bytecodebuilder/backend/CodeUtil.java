@@ -33,13 +33,13 @@ import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.C
 import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.METHOD_NAME;
 
 public class CodeUtil {
-    public static String getProGuardInstructions(String javaCode) {
+    public static String getProGuardInstructions(String javaCode, String customClassPath) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
         SimpleJavaFileManager fileManager;
         try {
-            fileManager = compile(javaCode, printWriter);
+            fileManager = compile(javaCode, printWriter, customClassPath);
         } catch (IOException e) {
             return e.getMessage() + "\n\n" + stringWriter;
         }
@@ -170,7 +170,7 @@ public class CodeUtil {
     }
 
     @NotNull
-    public static SimpleJavaFileManager compile(String javaCode, PrintWriter printWriter) throws IOException {
+    public static SimpleJavaFileManager compile(String javaCode, PrintWriter printWriter, String customClassPath) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         if (compiler == null)
         {
@@ -195,11 +195,21 @@ public class CodeUtil {
 
         SimpleJavaFileManager fileManager = new SimpleJavaFileManager(compiler.getStandardFileManager(listener, Locale.ENGLISH, StandardCharsets.UTF_8));
 
+        List<String> compilerArguments = new ArrayList<>(List.of("--release", "8", "-cp"));
+        if (customClassPath != null && !"".equals(customClassPath))
+        {
+            compilerArguments.add(System.getProperty("java.class.path") + ":" + customClassPath);
+        }
+        else
+        {
+            compilerArguments.add(System.getProperty("java.class.path"));
+        }
+
         JavaCompiler.CompilationTask compilationTask = compiler.getTask(
                 null,
                 fileManager,
                 listener,
-                Arrays.asList("--release", "8", "-cp", System.getProperty("java.class.path")),
+                compilerArguments,
                 null,
                 Collections.singletonList(compilationUnit));
 

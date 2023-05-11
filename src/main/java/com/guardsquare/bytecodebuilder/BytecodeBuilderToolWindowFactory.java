@@ -59,10 +59,15 @@ implements   ToolWindowFactory, DumbAware
 
     private static class BytecodeBuilderToolWindowContent
     {
-        public JPanel            contentPanel = new JPanel();
+
+        public JPanel            contentPanel               = new JPanel();
         public LanguageTextField inputField;
-        public JTextArea         outputText   = new JTextArea();
-        public JScrollPane       outputField  = new JBScrollPane(outputText);
+        public JTextArea         outputText                 = new JTextArea();
+        public JScrollPane       outputField                = new JBScrollPane(outputText);
+        public JButton           classPathChooserOpenButton = new JButton("Set classpath");
+        public JLabel            classPathLabel             = new JLabel("No custom classpath set.");
+        public JFileChooser      classPathFileChooser       = new JFileChooser();
+        public String            customClassPath            = "";
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
@@ -71,10 +76,53 @@ implements   ToolWindowFactory, DumbAware
             // Set up input panel.
             setupInputPanel();
 
+            // Set up file chooser button etc.
+            setUpClasspathChooser();
+
             // Set up main panel.
             contentPanel.setLayout(new GridLayout(2,1));
             contentPanel.add(inputField);
-            contentPanel.add(outputField);
+
+            // Construct the lower layout pane
+            setUpLowerLayoutPane();
+        }
+
+        private void setUpClasspathChooser()
+        {
+            classPathFileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            classPathChooserOpenButton.addActionListener(e -> {
+                int resultCode = classPathFileChooser.showOpenDialog(null);
+                if (resultCode == JFileChooser.APPROVE_OPTION)
+                {
+                    customClassPath = classPathFileChooser.getSelectedFile().getAbsolutePath();
+                    classPathLabel.setText(customClassPath);
+                }
+            });
+        }
+
+        private void setUpLowerLayoutPane()
+        {
+            JPanel containerPanel = new JPanel(new GridBagLayout());
+            JPanel containerPanel2 = new JPanel(new GridBagLayout());
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridx = 0;
+            c.gridy = 0;
+            c.weightx = 0.8;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            containerPanel2.add(classPathLabel, c);
+            c.gridx = 1;
+            c.weightx = 0.2;
+            containerPanel2.add(classPathChooserOpenButton, c);
+            c.gridx = 0;
+            c.gridy = 0;
+            c.weightx = 1.0;
+            c.weighty = 0.8;
+            c.fill = GridBagConstraints.BOTH;
+            containerPanel.add(outputField, c);
+            c.gridy = 1;
+            c.weighty = 0.2;
+            containerPanel.add(containerPanel2, c);
+            contentPanel.add(containerPanel);
         }
 
         /**
@@ -98,7 +146,7 @@ implements   ToolWindowFactory, DumbAware
          */
         private void updateOutputPanel()
         {
-            outputText.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
+            outputText.setText(CodeUtil.getProGuardInstructions(inputField.getText(), customClassPath));
         }
     }
 }
