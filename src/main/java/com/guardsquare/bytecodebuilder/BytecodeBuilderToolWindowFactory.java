@@ -54,7 +54,7 @@ implements   ToolWindowFactory, DumbAware
         public  LanguageTextField        inputField;
         public  JTextArea                outputText                 = new JTextArea();
         public  JScrollPane              outputField;
-        public  JButton                  copyButton                 = new JButton("Copy code");
+        public  JButton                  copyCodeButton             = new JButton("Copy code");
         public  JButton                  classPathChooserOpenButton = new JButton("Set classpath");
         public  JLabel                   classPathLabel             = new JLabel("No custom classpath set.");
         public  JFileChooser             classPathFileChooser       = new JFileChooser();
@@ -72,7 +72,7 @@ implements   ToolWindowFactory, DumbAware
             // Set up input panel.
             setupInputPanel();
 
-            // Set up input panel.
+            // Set up output panel.
             updateOutputPanel();
 
             // Set up the copy code button.
@@ -91,7 +91,7 @@ implements   ToolWindowFactory, DumbAware
 
         private void setUpCopyCodeButton()
         {
-            copyButton.addActionListener(e -> copyCodeToClipBoard());
+            copyCodeButton.addActionListener(e -> copyCodeToClipBoard());
         }
 
         private void setUpClasspathChooser()
@@ -116,7 +116,7 @@ implements   ToolWindowFactory, DumbAware
             c.gridy = 0;
             c.weightx = 0.2;
             c.fill = GridBagConstraints.HORIZONTAL;
-            containerPanel2.add(copyButton, c);
+            containerPanel2.add(copyCodeButton, c);
             c.gridx = 0;
             c.gridy = 1;
             c.weightx = 0.8;
