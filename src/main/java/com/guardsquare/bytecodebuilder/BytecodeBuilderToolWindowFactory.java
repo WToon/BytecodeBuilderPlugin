@@ -168,6 +168,9 @@ implements   ToolWindowFactory, DumbAware
             outputText.setText(CodeUtil.getProGuardInstructions(inputField.getText(), customClassPath));
         }
 
+        /**
+         * Copy the code from the output window to the clipboard.
+         */
         private void copyCodeToClipBoard() {
             CopyPasteManager.getInstance().setContents(new StringSelection(outputText.getText()));
         }
