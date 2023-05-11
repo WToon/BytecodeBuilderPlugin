@@ -79,15 +79,7 @@ implements   ToolWindowFactory, DumbAware
             setUpClasspathChooser();
 
             // Set up main panel.
-            GridBagLayout layout = new GridBagLayout();
-            GridBagConstraints gbc = new GridBagConstraints();
-            contentPanel.setLayout(layout);
-
-            gbc.gridx = 0;
-            gbc.gridy = 0;
-            gbc.weighty = 0.48;
-            gbc.fill = GridBagConstraints.BOTH;
-            layout.setConstraints(inputField, gbc);
+            contentPanel.setLayout(new GridLayout(2,1));
             contentPanel.add(inputField);
 
             // Construct the lower layout pane
