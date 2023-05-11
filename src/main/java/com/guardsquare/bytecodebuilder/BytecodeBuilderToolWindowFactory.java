@@ -40,7 +40,6 @@ implements   ToolWindowFactory, DumbAware
         toolWindow.getContentManager().addContent(content);
     }
 
-
     private static class BytecodeBuilderToolWindowContent
     {
         public JPanel            contentPanel = new JPanel();
@@ -61,7 +60,6 @@ implements   ToolWindowFactory, DumbAware
             contentPanel.add(outputField);
         }
 
-
         /**
          * Sets up the input panel.
          */
@@ -78,13 +76,11 @@ implements   ToolWindowFactory, DumbAware
             );
         }
 
-
         /**
          * Update the output panel.
          */
         private void updateOutputPanel()
         {
-            String text = inputField.getText();
             outputField.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
         }
     }
