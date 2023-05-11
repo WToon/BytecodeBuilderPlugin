@@ -200,7 +200,7 @@ public class CodeUtil {
                 null,
                 fileManager,
                 listener,
-                Arrays.asList("--release", "8"),
+                Arrays.asList("--release", "8", "-cp", System.getProperty("java.class.path")),
                 null,
                 Collections.singletonList(compilationUnit));
 
