@@ -93,6 +93,19 @@ public class CodeUtil {
             "}\n";
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        if (compiler == null)
+        {
+            try
+            {
+                Class<?> javacTool = Class.forName("com.sun.tools.javac.api.JavacTool");
+                java.lang.reflect.Method create = javacTool.getMethod("create");
+                compiler = (JavaCompiler) create.invoke(null);
+            } catch (Exception e)
+            {
+                throw new RuntimeException(e);
+            }
+        }
+
         JavaFileObject compilationUnit = new StringJavaFileObject(CLASS_NAME, program);
 
         DiagnosticListener<JavaFileObject> listener = diagnostic -> {
