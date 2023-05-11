@@ -72,6 +72,9 @@ implements   ToolWindowFactory, DumbAware
             // Set up input panel.
             setupInputPanel();
 
+            // Set up input panel.
+            updateOutputPanel();
+
             // Set up the copy code button.
             setUpCopyCodeButton();
 
