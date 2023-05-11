@@ -4,6 +4,7 @@ package com.guardsquare.bytecodebuilder;
 import com.guardsquare.bytecodebuilder.backend.CodeUtil;
 import com.intellij.lang.Language;
 import com.intellij.lang.StdLanguages;
+import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
@@ -52,11 +53,18 @@ implements   ToolWindowFactory, DumbAware
 
         @Override
         protected @NotNull EditorEx createEditor() {
-            EditorEx editor = super.createEditor();
-            editor.getSettings().setLineNumbersShown(true);
-            editor.getSettings().setAutoCodeFoldingEnabled(true);
-            editor.getSettings().setFoldingOutlineShown(true);
-            editor.getSettings().setAllowSingleLogicalLineFolding(true);
+            EditorEx       editor   = super.createEditor();
+            EditorSettings settings = editor.getSettings();
+
+            settings.setLineNumbersShown(true);
+            settings.setAutoCodeFoldingEnabled(true);
+            settings.setFoldingOutlineShown(true);
+            settings.setAllowSingleLogicalLineFolding(true);
+            settings.setIndentGuidesShown(true);
+            settings.setGutterIconsShown(true);
+            settings.setTabSize(4);
+            settings.setShowIntentionBulb(true);
+            settings.setAnimatedScrolling(true);
             return editor;
         }
     }
