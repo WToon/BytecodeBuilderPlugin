@@ -33,7 +33,8 @@ implements   ToolWindowFactory, DumbAware
     {
         public JPanel            contentPanel = new JPanel();
         public LanguageTextField inputField;
-        public JTextArea         outputField;
+        public JTextArea         outputField  = new JTextArea();
+
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
