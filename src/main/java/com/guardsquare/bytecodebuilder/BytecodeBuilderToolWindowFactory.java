@@ -2,40 +2,44 @@ package com.guardsquare.bytecodebuilder;
 
 
 import com.guardsquare.bytecodebuilder.backend.CodeUtil;
+import com.intellij.lang.StdLanguages;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.EditorTextField;
+import com.intellij.ui.LanguageTextField;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
 
 public class BytecodeBuilderToolWindowFactory
-implements   ToolWindowFactory
+implements   ToolWindowFactory, DumbAware
 {
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow)
     {
         Content content = ContentFactory.getInstance().createContent(
-                new BytecodeBuilderToolWindowContent().contentPanel, "", false);
+                new BytecodeBuilderToolWindowContent(project).contentPanel, "", false);
         toolWindow.getContentManager().addContent(content);
     }
 
 
     private static class BytecodeBuilderToolWindowContent
     {
-        public JPanel    contentPanel    = new JPanel();
-        public JTextArea inputField      = new JTextArea();
-        public JTextArea outputField     = new JTextArea();
+        public JPanel            contentPanel = new JPanel();
+        public LanguageTextField inputField;
+        public JTextArea         outputField;
 
-        public BytecodeBuilderToolWindowContent()
+        public BytecodeBuilderToolWindowContent(Project project)
         {
+            inputField = new LanguageTextField(StdLanguages.JAVA, project, "");
+            inputField.setOneLineMode(false);
+
             // Set up input panel.
             setupInputPanel();
 
@@ -51,24 +55,10 @@ implements   ToolWindowFactory
          */
         private void setupInputPanel()
         {
-            inputField.setFont(Font.getFont(Font.DIALOG_INPUT));
-            Document inputFieldDocument = inputField.getDocument();
-            inputFieldDocument.addDocumentListener(
+            inputField.addDocumentListener(
                     new DocumentListener() {
                         @Override
-                        public void insertUpdate(DocumentEvent e)
-                        {
-                            updateOutputPanel();
-                        }
-
-                        @Override
-                        public void removeUpdate(DocumentEvent e)
-                        {
-                            updateOutputPanel();
-                        }
-
-                        @Override
-                        public void changedUpdate(DocumentEvent e)
+                        public void documentChanged(@NotNull DocumentEvent event)
                         {
                             updateOutputPanel();
                         }
