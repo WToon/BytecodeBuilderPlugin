@@ -26,7 +26,7 @@ implements   ToolWindowFactory, DumbAware
 
     private static final String PROMPT =
             "class " + CLASS_NAME + " {\n" +
-            "    public static void " + METHOD_NAME + "() {\n" +
+            "    public static void " + METHOD_NAME + "(String... args) {\n" +
             "        // Put your code here.\n" +
             "    }\n" +
             "}";
