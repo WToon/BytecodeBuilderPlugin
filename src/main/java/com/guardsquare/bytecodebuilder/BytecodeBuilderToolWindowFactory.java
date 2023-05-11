@@ -2,9 +2,11 @@ package com.guardsquare.bytecodebuilder;
 
 
 import com.guardsquare.bytecodebuilder.backend.CodeUtil;
+import com.intellij.lang.Language;
 import com.intellij.lang.StdLanguages;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.editor.ex.EditorEx;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class BytecodeBuilderToolWindowFactory
 implements   ToolWindowFactory, DumbAware
@@ -39,6 +42,22 @@ implements   ToolWindowFactory, DumbAware
         toolWindow.getContentManager().addContent(content);
     }
 
+    private static class CustomLanguageTextField extends LanguageTextField {
+        public CustomLanguageTextField(Language language, Project project, String text, boolean oneLineMode) {
+            super(language, project, text, oneLineMode);
+        }
+
+        @Override
+        protected @NotNull EditorEx createEditor() {
+            EditorEx editor = super.createEditor();
+            editor.getSettings().setLineNumbersShown(true);
+            editor.getSettings().setAutoCodeFoldingEnabled(true);
+            editor.getSettings().setFoldingOutlineShown(true);
+            editor.getSettings().setAllowSingleLogicalLineFolding(true);
+            return editor;
+        }
+    }
+
     private static class BytecodeBuilderToolWindowContent
     {
         public JPanel            contentPanel = new JPanel();
@@ -48,8 +67,7 @@ implements   ToolWindowFactory, DumbAware
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
-            inputField = new LanguageTextField(StdLanguages.JAVA, project, PROMPT);
-            inputField.setOneLineMode(false);
+            inputField = new CustomLanguageTextField(StdLanguages.JAVA, project, PROMPT, false);
 
             // Set up input panel.
             setupInputPanel();

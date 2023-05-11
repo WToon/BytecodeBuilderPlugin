@@ -190,7 +190,7 @@ public class CodeUtil {
         DiagnosticListener<JavaFileObject> listener = diagnostic -> {
             printWriter.print(diagnostic.getKind().toString().toLowerCase() + ": ");
             printWriter.print(diagnostic.getMessage(Locale.ENGLISH));
-            printWriter.println(" at line " + (diagnostic.getLineNumber() - 3) + "."); // -3 for class and method definitions.
+            printWriter.println(" at line " + (diagnostic.getLineNumber()) + ".");
         };
 
         SimpleJavaFileManager fileManager = new SimpleJavaFileManager(compiler.getStandardFileManager(listener, Locale.ENGLISH, StandardCharsets.UTF_8));
