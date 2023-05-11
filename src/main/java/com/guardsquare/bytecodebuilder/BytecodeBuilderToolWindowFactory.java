@@ -1,17 +1,22 @@
 package com.guardsquare.bytecodebuilder;
 
 
+import com.intellij.icons.AllIcons;
+import com.intellij.openapi.editor.event.DocumentEvent;
+import com.intellij.openapi.editor.event.DocumentListener;
+import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.StdFileTypes;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
+import com.intellij.psi.PsiFile;
+import com.intellij.psi.PsiFileFactory;
+import com.intellij.ui.EditorTextField;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
 import java.awt.*;
 
 public class BytecodeBuilderToolWindowFactory
@@ -28,16 +33,17 @@ implements   ToolWindowFactory
 
     private static class BytecodeBuilderToolWindowContent
     {
-        public JPanel       contentPanel    = new JPanel();
-        public JTextArea    inputField      = new JTextArea();
-        public JTextArea    outputField     = new JTextArea();
+        public JPanel          contentPanel    = new JPanel();
+        public EditorTextField inputField      = new EditorTextField();
+        public EditorTextField outputField     = new EditorTextField();
 
         public BytecodeBuilderToolWindowContent()
         {
+            // Set up input panel.
             setupInputPanel();
 
+            // Set up main panel.
             contentPanel.setLayout(new GridLayout(2,1));
-            
             contentPanel.add(inputField);
             contentPanel.add(outputField);
         }
@@ -48,25 +54,24 @@ implements   ToolWindowFactory
          */
         private void setupInputPanel()
         {
-            Document inputFieldDocument = inputField.getDocument();
-            inputFieldDocument.addDocumentListener(
-                    new DocumentListener()
-                    {
+            inputField.setFont(Font.getFont(Font.DIALOG_INPUT));
+            inputField.addDocumentListener(
+                    new DocumentListener() {
                         @Override
-                        public void changedUpdate(DocumentEvent e) { /* Never triggered by JTextAre. */ }
-
-                        @Override
-                        public void insertUpdate(DocumentEvent e)
-                        {
-                            outputField.setText(inputField.getText());
+                        public void documentChanged(@NotNull DocumentEvent event) {
+                            updateOutputPanel();
                         }
+                    }
+            );
+        }
 
-                        @Override
-                        public void removeUpdate(DocumentEvent e)
-                        {
-                            outputField.setText(inputField.getText());
-                        }
-                    });
+
+        /**
+         * Update the output panel.
+         */
+        private void updateOutputPanel()
+        {
+            outputField.setText(inputField.getText());
         }
     }
 }
