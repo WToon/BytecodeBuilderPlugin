@@ -8,6 +8,7 @@ import com.intellij.openapi.editor.EditorSettings;
 import com.intellij.openapi.editor.event.DocumentEvent;
 import com.intellij.openapi.editor.event.DocumentListener;
 import com.intellij.openapi.editor.ex.EditorEx;
+import com.intellij.openapi.ide.CopyPasteManager;
 import com.intellij.openapi.project.DumbAware;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 
 public class BytecodeBuilderToolWindowFactory
 implements   ToolWindowFactory, DumbAware
@@ -52,6 +54,7 @@ implements   ToolWindowFactory, DumbAware
         public  LanguageTextField        inputField;
         public  JTextArea                outputText                 = new JTextArea();
         public  JScrollPane              outputField;
+        public  JButton                  copyButton                 = new JButton("Copy code");
         public  JButton                  classPathChooserOpenButton = new JButton("Set classpath");
         public  JLabel                   classPathLabel             = new JLabel("No custom classpath set.");
         public  JFileChooser             classPathFileChooser       = new JFileChooser();
@@ -69,15 +72,31 @@ implements   ToolWindowFactory, DumbAware
             // Set up input panel.
             setupInputPanel();
 
+            // Set up the copy code button.
+            setUpCopyCodeButton();
+
             // Set up file chooser button etc.
             setUpClasspathChooser();
 
             // Set up main panel.
-            contentPanel.setLayout(new GridLayout(2,1));
+            GridBagLayout layout = new GridBagLayout();
+            GridBagConstraints gbc = new GridBagConstraints();
+            contentPanel.setLayout(layout);
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weighty = 0.48;
+            gbc.fill = GridBagConstraints.BOTH;
+            layout.setConstraints(inputField, gbc);
             contentPanel.add(inputField);
 
             // Construct the lower layout pane
             setUpLowerLayoutPane();
+        }
+
+        private void setUpCopyCodeButton()
+        {
+            copyButton.addActionListener(e -> copyCodeToClipBoard());
         }
 
         private void setUpClasspathChooser()
@@ -105,6 +124,7 @@ implements   ToolWindowFactory, DumbAware
             containerPanel2.add(classPathLabel, c);
             c.gridx = 1;
             c.weightx = 0.2;
+//            containerPanel2.add(copyButton, c);
             containerPanel2.add(classPathChooserOpenButton, c);
             c.gridx = 0;
             c.gridy = 0;
@@ -148,6 +168,10 @@ implements   ToolWindowFactory, DumbAware
         private void updateOutputPanel()
         {
             outputText.setText(CodeUtil.getProGuardInstructions(inputField.getText(), customClassPath));
+        }
+
+        private void copyCodeToClipBoard() {
+            CopyPasteManager.getInstance().setContents(new StringSelection(outputText.getText()));
         }
     }
 
