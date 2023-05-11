@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 public class ExceptionLabelManager
 {
-
     private final List<String> labelNames = new ArrayList<>();
     int tryStartLabels = 0;
     int tryEndLabels   = 0;
@@ -39,5 +38,4 @@ public class ExceptionLabelManager
                 .map(labelName -> String.format("Label %s = composer.createLabel();", labelName))
                 .collect(Collectors.toList());
     }
-
 }

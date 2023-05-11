@@ -34,7 +34,6 @@ import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.M
 
 public class CodeUtil {
     public static String getProGuardInstructions(String javaCode) {
-        // Writer for service.
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
 
@@ -83,13 +82,14 @@ public class CodeUtil {
                           codeAttribute.instructionsAccept(clazz, method, labelPrinter);
                           codeAttribute.instructionsAccept(clazz, method, methodRefPrinter);
 
-                          // Collect instructions as ProcessingItems to prepare for exception handling insertion etc.
+                          // Collect instructions as ProcessingItems to prepare for exception handling.
                           codeAttribute.instructionsAccept(clazz, method, new InstructionVisitor() {
                               @Override
                               public void visitAnyInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, Instruction instruction) {
                                   offsetsToProcessingItems.put(offset, new ProcessingItem(instruction, offset));
                               }
                           });
+
                           List<ProcessingItem> thingsToProcess = offsetsToProcessingItems.entrySet()
                                   .stream()
                                   .sorted(Comparator.comparingInt(Map.Entry::getKey))
@@ -103,7 +103,7 @@ public class CodeUtil {
                               int tryEndOffset = exceptionInfo.u2endPC;
                               int exceptionHandlerOffset = exceptionInfo.u2handlerPC;
 
-                              // Add labels
+                              // Add labels.
                               String tryStartLabel = exceptionLabelManager.getFreshTryStartLabel();
                               String tryEndLabel = exceptionLabelManager.getFreshTryEndLabel();
                               String handlerLabel = exceptionLabelManager.getFreshHandlerLabel();
@@ -112,21 +112,20 @@ public class CodeUtil {
                               insertLabelAt(tryEndLabel, tryEndOffset, thingsToProcess, offsetsToProcessingItems);
                               insertLabelAt(handlerLabel, exceptionHandlerOffset, thingsToProcess, offsetsToProcessingItems);
 
-                              // Add the catch pseudo-instruction to the end of our processing list
+                              // Add the catch pseudo-instruction to the end of our processing list.
                               thingsToProcess.add(new ProcessingItem(new CatchSpec(
                                   tryStartLabel,
                                   tryEndLabel,
                                   handlerLabel,
                                   exceptionClassName
                               )));
-
                           });
 
-                          // Print more labels
+                          // Print more labels.
                           exceptionLabelManager.getLabelCreationStatements().forEach(printWriter::println);
                           printWriter.println("composer");
 
-                          // Iterate over the entire ProcessItem list, delegating where necessary
+                          // Iterate over the entire ProcessingItem list, delegating where necessary.
                           InstructionPrinter instructionPrinter = new InstructionPrinter(printWriter, targetFinder, labelPrinter);
                           thingsToProcess.forEach(processingItem -> {
                               switch(processingItem.type) {
