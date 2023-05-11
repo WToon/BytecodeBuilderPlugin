@@ -10,6 +10,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.LanguageTextField;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,8 @@ implements   ToolWindowFactory, DumbAware
     {
         public JPanel            contentPanel = new JPanel();
         public LanguageTextField inputField;
-        public JTextArea         outputField  = new JTextArea();
+        public JTextArea         outputText   = new JTextArea();
+        public JScrollPane       outputField  = new JBScrollPane(outputText);
 
         public BytecodeBuilderToolWindowContent(Project project)
         {
@@ -79,7 +81,7 @@ implements   ToolWindowFactory, DumbAware
          */
         private void updateOutputPanel()
         {
-            outputField.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
+            outputText.setText(CodeUtil.getProGuardInstructions(inputField.getText()));
         }
     }
 }
