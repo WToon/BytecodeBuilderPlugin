@@ -29,8 +29,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.CLASS_NAME;
-import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindowFactory.METHOD_NAME;
+import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindow.CLASS_NAME;
+import static com.guardsquare.bytecodebuilder.BytecodeBuilderToolWindow.METHOD_NAME;
 
 public class CodeUtil {
     public static String getProGuardInstructions(String javaCode, String customClassPath) {
