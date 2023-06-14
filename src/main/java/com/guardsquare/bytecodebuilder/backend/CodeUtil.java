@@ -64,6 +64,7 @@ public class CodeUtil {
         }
 
         printWriter.println("CompactCodeAttributeComposer composer = new CompactCodeAttributeComposer(targetClass);");
+        printWriter.println("ConstantPoolEditor constantPoolEditor = new ConstantPoolEditor(targetClass);");
 
         BranchTargetFinder targetFinder = new BranchTargetFinder();
         classPool.classAccept(CLASS_NAME, new AllMethodVisitor(
@@ -123,7 +124,7 @@ public class CodeUtil {
 
                           // Print more labels.
                           exceptionLabelManager.getLabelCreationStatements().forEach(printWriter::println);
-                          printWriter.println("composer");
+                          printWriter.println("composer.beginCodeFragment(0xFFFF)");
 
                           // Iterate over the entire ProcessingItem list, delegating where necessary.
                           InstructionPrinter instructionPrinter = new InstructionPrinter(printWriter, targetFinder, labelPrinter);
@@ -144,6 +145,7 @@ public class CodeUtil {
                                                          spec.exceptionClassName);
                               }
                           });
+                          printWriter.println("        .endCodeFragment()");
                       }
                 }))))));
 
