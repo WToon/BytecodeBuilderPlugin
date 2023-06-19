@@ -11,10 +11,11 @@ import proguard.classfile.util.BranchTargetFinder;
 
 import java.io.PrintWriter;
 
-public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
-    private final PrintWriter printWriter;
-    private final BranchTargetFinder targetFinder;
-    private final LabelPrinter labelPrinter;
+public class InstructionPrinter implements InstructionVisitor {
+    private final PrintWriter            printWriter;
+    private final BranchTargetFinder     targetFinder;
+    private final LabelPrinter           labelPrinter;
+    private final ConstantArgumentFinder constantArgumentFinder = new ConstantArgumentFinder();
 
     public InstructionPrinter(PrintWriter printWriter, BranchTargetFinder targetFinder, LabelPrinter labelPrinter) {
         this.printWriter = printWriter;
@@ -47,16 +48,25 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
         if (variableInstruction.variableIndex > 3) {
             this.printWriter.print(variableInstruction.variableIndex);
         }
+        if (variableInstruction.opcode == Instruction.OP_IINC)
+        {
+            this.printWriter.print(", ");
+            this.printWriter.print(variableInstruction.constant);
+        }
         this.printWriter.println(")");
     }
 
     @Override
     public void visitConstantInstruction(Clazz clazz, Method method, CodeAttribute codeAttribute, int offset, ConstantInstruction constantInstruction) {
         visitBefore(offset);
+        constantArgumentFinder.reset();
+        clazz.constantPoolEntryAccept(constantInstruction.constantIndex, constantArgumentFinder);
         this.printWriter.print("        .");
-        this.printWriter.print(getName(constantInstruction));
+        String name = getName(constantInstruction);
+        this.printWriter.print(name);
+        if (constantArgumentFinder.isClassString && name.startsWith("ldc")) this.printWriter.print("_");
         this.printWriter.print("(");
-        clazz.constantPoolEntryAccept(constantInstruction.constantIndex, this);
+        this.printWriter.print(constantArgumentFinder.argument);
         this.printWriter.println(")");
     }
 
@@ -75,6 +85,15 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
             case Instruction.OP_NEW:
             case Instruction.OP_INSTANCEOF:
                 return instruction.getName() + "_";
+            case Instruction.OP_IFACMPEQ:
+            case Instruction.OP_IFACMPNE:
+            case Instruction.OP_IFICMPEQ:
+            case Instruction.OP_IFICMPGE:
+            case Instruction.OP_IFICMPGT:
+            case Instruction.OP_IFICMPLE:
+            case Instruction.OP_IFICMPLT:
+            case Instruction.OP_IFICMPNE:
+                return instruction.getName().replace("_", "");
             default:
                 return instruction.getName();
         }
@@ -95,58 +114,91 @@ public class InstructionPrinter implements InstructionVisitor, ConstantVisitor {
         visitBefore(offset);
     }
 
-    @Override
-    public void visitAnyConstant(Clazz clazz, Constant constant) {
-        this.printWriter.print("\"" + constant + "\"");
-    }
+    private static class ConstantArgumentFinder implements ConstantVisitor {
+        private boolean isClassString;
+        private String  argument;
 
-    @Override
-    public void visitFieldrefConstant(Clazz clazz, FieldrefConstant fieldrefConstant) {
-        this.printWriter.printf("\"%s\", \"%s\", \"%s\"", fieldrefConstant.getClassName(clazz), fieldrefConstant.getName(clazz), fieldrefConstant.getType(clazz));
-    }
+        public void reset()
+        {
+            isClassString = false;
+            argument = "";
+        }
 
-    @Override
-    public void visitClassConstant(Clazz clazz, ClassConstant classConstant) {
-        this.printWriter.print("\"" + classConstant.getName(clazz) + "\"");
-    }
+        @Override
+        public void visitAnyConstant(Clazz clazz, Constant constant)
+        {
+            argument = "\"" + constant + "\"";
+        }
 
-    @Override
-    public void visitAnyMethodrefConstant(Clazz clazz, AnyMethodrefConstant anyMethodrefConstant) {
-        this.printWriter.printf("\"%s\", \"%s\", \"%s\"", anyMethodrefConstant.getClassName(clazz), anyMethodrefConstant.getName(clazz), anyMethodrefConstant.getType(clazz));
-    }
+        @Override
+        public void visitFieldrefConstant(Clazz clazz, FieldrefConstant fieldrefConstant) {
+            argument = String.format("\"%s\", \"%s\", \"%s\"", fieldrefConstant.getClassName(clazz), fieldrefConstant.getName(clazz), fieldrefConstant.getType(clazz));
+        }
 
-    @Override
-    public void visitInvokeDynamicConstant(Clazz clazz, InvokeDynamicConstant invokeDynamicConstant) {
-        this.printWriter.printf("%d, \"%s\", \"%s\"", invokeDynamicConstant.getBootstrapMethodAttributeIndex(), invokeDynamicConstant.getName(clazz), invokeDynamicConstant.getType(clazz));
-    }
+        @Override
+        public void visitClassConstant(Clazz clazz, ClassConstant classConstant) {
+            if (classConstant.getName(clazz).equals("Container")) {
+                argument = "targetClass";
+            } else {
+                isClassString = true;
+                argument = String.format("constantPoolEditor.addClassConstant(\"%s\", null)", classConstant.getName(clazz));
+            }
+        }
 
-    @Override
-    public void visitStringConstant(Clazz clazz, StringConstant stringConstant) {
-        this.printWriter.print("\"" + stringConstant.getString(clazz) + "\"");
-    }
+        @Override
+        public void visitAnyMethodrefConstant(Clazz clazz, AnyMethodrefConstant anyMethodrefConstant) {
+            argument = String.format("\"%s\", \"%s\", \"%s\"", anyMethodrefConstant.getClassName(clazz), anyMethodrefConstant.getName(clazz), anyMethodrefConstant.getType(clazz));
+        }
 
-    @Override
-    public void visitUtf8Constant(Clazz clazz, Utf8Constant utf8Constant) {
-        this.printWriter.print("\"" + utf8Constant.getString() + "\"");
-    }
+        @Override
+        public void visitInvokeDynamicConstant(Clazz clazz, InvokeDynamicConstant invokeDynamicConstant) {
+            argument = String.format("%d, \"%s\", \"%s\"", invokeDynamicConstant.getBootstrapMethodAttributeIndex(), invokeDynamicConstant.getName(clazz), invokeDynamicConstant.getType(clazz));
+        }
 
-    @Override
-    public void visitIntegerConstant(Clazz clazz, IntegerConstant integerConstant) {
-        this.printWriter.print(integerConstant.getValue());
-    }
+        @Override
+        public void visitStringConstant(Clazz clazz, StringConstant stringConstant) {
+            String string = stringConstant.getString(clazz)
+                    .replace("\\", "\\\\")
+                    .replace("\t", "\\t")
+                    .replace("\b", "\\b")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\f", "\\f")
+                    .replace("\"", "\\\"");
+            argument = "\"" + string + "\"";
+        }
 
-    @Override
-    public void visitLongConstant(Clazz clazz, LongConstant longConstant) {
-        this.printWriter.print(longConstant.getValue());
-    }
+        @Override
+        public void visitUtf8Constant(Clazz clazz, Utf8Constant utf8Constant) {
+            String string = utf8Constant.getString()
+                    .replace("\\", "\\\\")
+                    .replace("\t", "\\t")
+                    .replace("\b", "\\b")
+                    .replace("\n", "\\n")
+                    .replace("\r", "\\r")
+                    .replace("\f", "\\f")
+                    .replace("\"", "\\\"");
+            argument = "\"" + string + "\"";
+        }
 
-    @Override
-    public void visitFloatConstant(Clazz clazz, FloatConstant floatConstant) {
-        this.printWriter.print(floatConstant.getValue());
-    }
+        @Override
+        public void visitIntegerConstant(Clazz clazz, IntegerConstant integerConstant) {
+            argument = Integer.toString(integerConstant.getValue());
+        }
 
-    @Override
-    public void visitDoubleConstant(Clazz clazz, DoubleConstant doubleConstant) {
-        this.printWriter.print(doubleConstant.getValue());
+        @Override
+        public void visitLongConstant(Clazz clazz, LongConstant longConstant) {
+            argument = Long.toString(longConstant.getValue());
+        }
+
+        @Override
+        public void visitFloatConstant(Clazz clazz, FloatConstant floatConstant) {
+            argument = Float.toString(floatConstant.getValue());
+        }
+
+        @Override
+        public void visitDoubleConstant(Clazz clazz, DoubleConstant doubleConstant) {
+            argument = Double.toString(doubleConstant.getValue());
+        }
     }
 }
